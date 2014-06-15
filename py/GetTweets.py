@@ -1,5 +1,6 @@
 from twython import Twython
 
+
 def getTweets(term, n=40):
 
 	TWITTER_APP_KEY = 'ipJtC2iMpo2PnDGjr2srOTnP3'
