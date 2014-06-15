@@ -12,7 +12,7 @@ def getTweets(term, n=40):
 	            oauth_token=TWITTER_ACCESS_TOKEN, 
 	            oauth_token_secret=TWITTER_ACCESS_TOKEN_SECRET)
 
-	search = t.search(q='#hackdayOG',  
+	search = t.search(q=term,  
 	                  count=n)
 
 	tweets = search['statuses']
@@ -28,4 +28,4 @@ def getTweets(term, n=40):
 	return [summarizedTweets]
 
 
-print getTweets("#hackdayOG", n=40)	 
+ 
