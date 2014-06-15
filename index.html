@@ -66,30 +66,24 @@
 	</style>
 </head>
 <body>
-	<div id="click-here" onclick="initialInput()" onkeyup="inputReady()">
-		<input id="input" placeholder="Add Hashtag" />
-	</div>
+	<form action="javascript:initialInput()" method="post" id="click-here" onkeypress="inputReady()">
+		<input id="input" autocomplete="off" placeholder="Add Hashtag" />
+	</form>
 	<div id="container"></div>
 
 	<script>
 
 	function initialInput() {
-		d3.select("#click-here").transition().duration(1000).style("opacity","0")
-		d3.select("#container").style("display","block")
+		d3.select("#click-here").transition().duration(1000).style("opacity","0");
+		d3.select("#container").style("display","block");
+		var hashtag = document.getElementById("input").value;
 		drawChart();
 		d3.select("#container").transition().duration(2000).style("opacity","1")
 	}
 
 	function inputReady() {
 		d3.select("#click-here").style("border","1px solid #205e9b").style("box-shadow","0px 0px 60px #8eaed2").style("background","#8eaed2")
-		console.log(d3.select("#input").text())
-	}
-
-	function initialInput() {
-		d3.select("#click-here").transition().duration(1000).style("opacity","0")
-		d3.select("#container").style("display","block")
-		drawChart();
-		d3.select("#container").transition().duration(2000).style("opacity","1")
+		d3.select("#input").style("color","#fff")
 	}
 
 	function drawChart() {
