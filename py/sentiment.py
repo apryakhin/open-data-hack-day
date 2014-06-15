@@ -33,7 +33,7 @@ def process(query):
     Tree = lambda: defaultdict(Tree)
     id = 0
     results = {}
-    for item in twitter.getTweets(query):
+    for item in GetTweets.getTweets(query):
         tree = Tree()
         hashtag = item['name']
         tweets = item['tweets']
@@ -49,16 +49,14 @@ def process(query):
         results[hashtag] = tree
         id += 1
     #convert the graph
-    sorted_results = sorted(results, key=itemgetter('score'), reverse=True)
     graph = Tree()
     graph['nodes'], graph['links'] = [], []
-    for hashtag in results.iteritems():
-        graph['nodes'].append({'name': sorted_results[i]['name'], 'score': sorted_results[i]['score']})
-        j = i
-        for link, score in sorted_results[i]['links']:
-            graph['links'].append( {'source': j, 'target': i, 'count': score})
-            j += 1
-
+    i = 0
+    for hashtag, value in results.iteritems():
+        graph['nodes'].append({'name': value['name'], 'score': value['score']})
+        for link, score in value['links']:
+            graph['links'].append( {'source': results[link]['id'], 'target': value['id'], 'count': score})
+        i += 1
     f = open('../data/graph.json', 'w')
     f.write(json.dumps(graph))
     return graph

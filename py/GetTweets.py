@@ -20,12 +20,8 @@ def getTweets(term, n=1):
 
 	f = open('result.json', 'w')
 	results = []
-	i = 0
 	try:
 		while len(q) > 0:
-			if i > 10:
-				break
-			i += 1
 			print q
 			term = q[0]
 			q.pop(0)
@@ -40,16 +36,18 @@ def getTweets(term, n=1):
 			for tweet in tweets:
 				tree['links'] = []
 				for hashtag in tweet['entities']['hashtags']:
-					if len(q) < 10 and hashtag['text'] not in seen:
+					if len(q) < 6 and hashtag['text'] not in seen:
 						q.append(hashtag['text'])
 						seen[hashtag['text']] = 1
-					tree['links'].append(hashtag['text'])
+						tree['links'].append(hashtag['text'])
 				tree['tweets'].append(tweet['text'])
 			results.append(tree)
 	except Exception as e:
 		print e
 		f.write(json.dumps(results))
+		return results
 	f.write(json.dumps(results))
+	return results
 
 
 if __name__ == '__main__':
