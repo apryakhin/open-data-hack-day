@@ -36,7 +36,7 @@ def getTweets(term, n=1):
 			for tweet in tweets:
 				tree['links'] = []
 				for hashtag in tweet['entities']['hashtags']:
-					if len(q) < 6 and hashtag['text'] not in seen:
+					if len(q) < 10 and hashtag['text'] not in seen:
 						q.append(hashtag['text'])
 						seen[hashtag['text']] = 1
 						tree['links'].append(hashtag['text'])
