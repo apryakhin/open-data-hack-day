@@ -1,7 +1,8 @@
 from twython import Twython
+from collections import defaultdict
+import json
 
-
-def getTweets(term, n=40):
+def getTweets(term, n=1):
 
 	TWITTER_APP_KEY = 'OMGTcMlp0HB1sY31MDdsvYaKn'
 	TWITTER_APP_KEY_SECRET = 'Kk5WQPREcQA3AbMXVCs1hkMYqMCFldbUcyfTyKazIi7CckTQT1' 
@@ -13,22 +14,43 @@ def getTweets(term, n=40):
 	            oauth_token=TWITTER_ACCESS_TOKEN, 
 	            oauth_token_secret=TWITTER_ACCESS_TOKEN_SECRET)
 
-	search = t.search(q=term,  
-	                  count=n)
+	q= [term]
+	
+	seen = {}
 
-	tweets = search['statuses']
+	f = open('result.json', 'w')
+	results = []
+	i = 0
+	try:
+		while len(q) > 0:
+			if i > 10:
+				break
+			i += 1
+			print q
+			term = q[0]
+			q.pop(0)
+
+			Tree = lambda: defaultdict(Tree)
+			tree = Tree()
+
+			search = t.search(q=term,  count=n)
+			tweets = search['statuses']
+			tree['name'] = term
+			tree['tweets'] = []
+			for tweet in tweets:
+				tree['links'] = []
+				for hashtag in tweet['entities']['hashtags']:
+					if len(q) < 10 and hashtag['text'] not in seen:
+						q.append(hashtag['text'])
+						seen[hashtag['text']] = 1
+					tree['links'].append(hashtag['text'])
+				tree['tweets'].append(tweet['text'])
+			results.append(tree)
+	except Exception as e:
+		print e
+		f.write(json.dumps(results))
+	f.write(json.dumps(results))
 
 
-	summarizedTweets = {'name':term, 'tweets':[], 'links':[]}
-
-	for tweet in tweets:
-		for hashtag in tweet['entities']['hashtags']:
-			summarizedTweets['links'].append(hashtag['text'])
-		summarizedTweets['tweets'].append(tweet['text'])
-
-	summarizedTweets['links'] = map(lambda x:x.lower(),summarizedTweets['links'])
-
-	return [summarizedTweets]
-
-
- 
+if __name__ == '__main__':
+ 	getTweets('brazil football')
