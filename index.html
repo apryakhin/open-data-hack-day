@@ -19,7 +19,7 @@
 			height: 200px;
 			top: 50%;
 			left: 50%;
-			margin-left:-80px;
+			margin-left:-100px;
 			margin-top: -90px;
 			text-align: center;
 			border:1px solid #bdc3c7;
@@ -52,24 +52,37 @@
 			height: 100%;
 		}
 
+		h1 {
+			position: absolute;
+			line-height: .8;
+			color: #ccc;
+			margin-left: 40px;
+			margin-left: 20px;
+			letter-spacing: 5;
+		  font-size: 50px;
+		  font-family: Montserrat;
+		}
+
 		.link {
-		  stroke: #8eaed2;
+		  stroke: #bbb;
 		}
 
 		.node text {
 			text-anchor: middle;
 		  pointer-events: none;
-		  font-size: 18px;
+		  font-size: 16px;
 		  font-family: Montserrat;
 		}
 
 	</style>
 </head>
 <body>
+	<h1>Twitter<br/>Moodboard</h1>
 	<form action="javascript:initialInput()" method="post" id="click-here" onkeypress="inputReady()">
 		<input id="input" autocomplete="off" placeholder="Add Hashtag" />
 	</form>
-	<div id="container"></div>
+	<div id="container">
+	</div>
 
 	<script>
 
@@ -90,29 +103,31 @@
 		d3.select("#container").style("display","block");
 		var hashtag = document.getElementById("input").value;
 		sendData(hashtag);
-		console.log(hashtag)
 		drawChart();
 		d3.select("#container").transition().duration(2000).style("opacity","1")
 	}
 
 	function inputReady() {
-		d3.select("#click-here").style("border","1px solid #205e9b").style("box-shadow","0px 0px 60px #8eaed2").style("background","#8eaed2")
-		d3.select("#input").style("color","#fff")
+		if (document.getElementById("input").value.length > 1) {
+			d3.select("#click-here").style("border","1px solid #205e9b").style("box-shadow","0px 0px 60px #8eaed2").style("background","#8eaed2")
+			d3.select("#input").style("color","#fff")
+		}
 	}
 
 	function drawChart() {
-			var width = window.innerWidth,
-	    height = window.innerHeight
+		var width = window.innerWidth,
+    height = window.innerHeight
 
-	var svg = d3.select("#container").append("svg")
-	    .attr("width", width)
-	    .attr("height", height);
+		var svg = d3.select("#container").append("svg")
+		    .attr("width", width)
+		    .attr("height", height);
 
-	var force = d3.layout.force()
-	    .gravity(.05)
-	    .distance(150)
-	    .charge(-500)
-	    .size([width, height]);
+		var force = d3.layout.force()
+		    .gravity(.05)
+		    .distance(220)
+		    .charge(-500)
+		    .linkDistance(200)
+		    .size([width, height]);
 
 		d3.json("data/graph.json", function(error, json) {
 		  force
@@ -122,27 +137,31 @@
 
 		  var link = svg.selectAll(".link")
 		      .data(json.links)
-		    .enter().append("line")
-		    	.attr("stroke-width", 4)
-		      .attr("class", "link");
+		    	.enter().append("line")
+		      .attr("class", "link")
+		      .attr("stroke-width", function(d) { return d.count })
+
 
 		  var node = svg.selectAll(".node")
 		      .data(json.nodes)
-		    .enter().append("g")
+		    	.enter().append("g")
 		      .attr("class", "node")
 		      .call(force.drag);
 
 		  node.append("circle")
-		      .attr("r", 50)
-		      .attr("fill", "#447cb3")
-		      .attr("stroke", "#205e9b")
-		      .attr("stroke-width", 3)
+		      .attr("r", 70)
+		      .attr("fill", function(d) { return getColor(d.score) })
+		      .attr("stroke", function(d) { return getStrokeColor(d.score) })
+		      .attr("stroke-width", 2)
 		      .attr("cx", 0)
-		      .attr("cy", 0);
+		      .attr("cy", 0)
+		      .on("click", function(d) {  
+		      	sendData(d.name);
+		      	console.log("Sent " + d.name);
+		      });
 
 		  node.append("text")
 		  		.attr("class", "label")
-		  		.attr("onclick", "alert('sdlfjk')")
 		      .attr("dx", 0)
 		      .attr("dy", ".35em")
 		      .attr("fill", "#fff")
@@ -159,8 +178,28 @@
 		});
 	}
 
-	function editLabel(e) {
-		alert(e);
+	function getColor(d) {
+		if(d == 0) {
+			return "#486078";
+		} else if(d < -0.2){
+			return "#d3493b";
+		} else if ( d >= -0.2 && d < 0.2 ){
+			return "#f8d239";
+		} else if ( d >= 0.2 ) {
+			return "#39c172";
+		}
+	}
+
+	function getStrokeColor(d) {
+		if(d == 0) {
+			return "#34495e";
+		} else if (d < -0.2){
+			return "#c0392b";
+		} else if ( d >= -0.2 && d < 0.2 ){
+			return "#f1c40f";
+		} else if ( d >= 0.2 ) {
+			return "#27ae60";
+		}
 	}
 
 </script>
