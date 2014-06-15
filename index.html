@@ -73,10 +73,24 @@
 
 	<script>
 
+	function sendData(params) {
+		var http = new XMLHttpRequest();
+		var url = "py/server.py";
+		http.open("GET", url+"?"+params, true);
+		http.onreadystatechange = function() {//Call a function when the state changes.
+			if(http.readyState == 4 && http.status == 200) {
+				alert(http.responseText);
+			}
+		}
+		http.send(null);
+	}
+
 	function initialInput() {
 		d3.select("#click-here").transition().duration(1000).style("opacity","0");
 		d3.select("#container").style("display","block");
 		var hashtag = document.getElementById("input").value;
+		sendData(hashtag);
+		console.log(hashtag)
 		drawChart();
 		d3.select("#container").transition().duration(2000).style("opacity","1")
 	}
