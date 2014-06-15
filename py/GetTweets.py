@@ -3,10 +3,10 @@ from twython import Twython
 
 def getTweets(term, n=40):
 
-	TWITTER_APP_KEY = 'ipJtC2iMpo2PnDGjr2srOTnP3'
-	TWITTER_APP_KEY_SECRET = 'IOfZSaYi3GOafMXBN8XP2XwSrNKmnL3Xy9NHBB1X2lF7asYnDY' 
-	TWITTER_ACCESS_TOKEN = '2427509917-Lf0EHFg7lTCxPXD1Mkkx4jP696r0KTjpAtEdCP0'
-	TWITTER_ACCESS_TOKEN_SECRET = 'EmZQ6StuipbnlJwjCRgtFiDSS77PU21msLIY30y1YhtOG'
+	TWITTER_APP_KEY = 'OMGTcMlp0HB1sY31MDdsvYaKn'
+	TWITTER_APP_KEY_SECRET = 'Kk5WQPREcQA3AbMXVCs1hkMYqMCFldbUcyfTyKazIi7CckTQT1' 
+	TWITTER_ACCESS_TOKEN = '2568849494-tHGymh8AM82zE6qmR8OLXQiA6lntfJzLbwirjt7'
+	TWITTER_ACCESS_TOKEN_SECRET = '78N9uHCY5hbdlrEYMdbvktAidduhSaOW2azep98MwcqBM'
 
 	t = Twython(app_key=TWITTER_APP_KEY, 
 	            app_secret=TWITTER_APP_KEY_SECRET, 
@@ -25,6 +25,8 @@ def getTweets(term, n=40):
 		for hashtag in tweet['entities']['hashtags']:
 			summarizedTweets['links'].append(hashtag['text'])
 		summarizedTweets['tweets'].append(tweet['text'])
+
+	summarizedTweets['links'] = map(lambda x:x.lower(),summarizedTweets['links'])
 
 	return [summarizedTweets]
 
