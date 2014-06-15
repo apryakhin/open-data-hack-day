@@ -178,6 +178,10 @@
 		});
 	}
 
+	function clearChart() {
+		d3.select("svg").remove();
+	}
+
 	function getColor(d) {
 		if(d == 0) {
 			return "#486078";
