@@ -33,7 +33,7 @@ def process(query):
     Tree = lambda: defaultdict(Tree)
     id = 0
     results = {}
-    for item in GetTweets.getTweets(query):
+    for item in twitter.getTweets(query):
         tree = Tree()
         hashtag = item['name']
         tweets = item['tweets']
